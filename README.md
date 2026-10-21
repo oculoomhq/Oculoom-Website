@@ -6,7 +6,7 @@ Static multipage site for the existing GitHub → Netlify deployment. Original u
 
 Node 22+, `npm ci`, `npm run build`, `npm test`. Netlify configuration is in `netlify.toml`: build `npm run build`, publish `dist`. No SPA catch-all: every page has its own HTML URL.
 
-Approved pages: Home, Ecosystem, Services, Approach, About, Pilot and pilot success, Contact and contact success; Privacy remains a **draft**, plus 404. The service URL hash opens the matching service panel. Mobile/tap, keyboard tabs, escape-to-close, reduced motion and consent controls are included.
+Approved pages: Home, Ecosystem, Services, Approach, About, Pilot and pilot success, Contact and contact success; Privacy now reflects the approved retention rules, plus 404. The service URL hash opens the matching service panel. Mobile/tap, keyboard tabs, escape-to-close, reduced motion and consent controls are included.
 
 ## Netlify Forms — required account setup
 
@@ -18,7 +18,7 @@ Approved pages: Home, Ecosystem, Services, Approach, About, Pilot and pilot succ
 6. No automatic applicant email is currently sent. Success is shown in the browser. Native HTML fallback also posts to Netlify using each form’s action.
 7. Forms use a honeypot and Netlify filtering. Consider additional provider-supported anti-spam if real traffic warrants it.
 
-**Important:** consent acknowledges the privacy policy but the policy must be finalised before accepting real submissions. This PR is a preview, not a production-ready policy claim.
+**Important:** consent acknowledges the privacy policy and operational retention must be in place before accepting real submissions. Enquiry, project, email and export copies require manual record review; the scheduler covers queued pilot form records only.
 
 ## Rejected pilot deletion — must configure and test
 
@@ -54,3 +54,9 @@ GA4 `G-25L264DXWL` loads only on oculoom.in/www.oculoom.in after explicit analyt
 - Confirm Analytics settings and consent behaviour on actual domain.
 - Keep client logos hidden pending assets.
 - Merge the PR only after preview review. No production merge/deployment is performed by this change alone.
+
+## Release readiness check
+
+The authenticated `verify` action reads the provider submission and private queue without writing or scheduling a rejection. It is allowed with `RETENTION_ENABLED=false`. After production deployment, use `node scripts/reject-pilot.mjs SUBMISSION_ID verify` with the saved admin secret and HTTPS production URL. Expect connectionVerified/submissionVerified/storageReadable true, retentionEnabled false, scheduled false for a fresh test. `reject` is blocked while the switch is false. `cancel` remains available for safety even with the switch off.
+
+Analytics configuration is two months for user/event data, reset off (confirmed by owner). Tag cookies explicitly expire after 60 days with cookie_update false. These are distinct from provider aggregate report retention. The policy includes Netlify/Gmail/Analytics processing and the six-month enquiry / twelve-month project record rules. Manually manage mail/export/project copies; no claim that the pilot-only function deletes those automatically.

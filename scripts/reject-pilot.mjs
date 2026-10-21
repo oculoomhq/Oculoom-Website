@@ -1,7 +1,7 @@
 // Set OCULOOM_SITE_URL and PILOT_ADMIN_SECRET in the terminal environment; never put secrets in arguments.
 const id = process.argv[2], action = process.argv[3] || 'reject';
-if (!id || !['reject','cancel'].includes(action) || !process.env.PILOT_ADMIN_SECRET || !process.env.OCULOOM_SITE_URL) {
-  console.error('Usage: node scripts/reject-pilot.mjs SUBMISSION_ID [reject|cancel]. Requires OCULOOM_SITE_URL and PILOT_ADMIN_SECRET environment variables.'); process.exit(1);
+if (!id || !['verify','reject','cancel'].includes(action) || !process.env.PILOT_ADMIN_SECRET || !process.env.OCULOOM_SITE_URL) {
+  console.error('Usage: node scripts/reject-pilot.mjs SUBMISSION_ID [verify|reject|cancel]. Requires OCULOOM_SITE_URL and PILOT_ADMIN_SECRET environment variables.'); process.exit(1);
 }
 const url = new URL('/.netlify/functions/pilot-rejection',process.env.OCULOOM_SITE_URL);
 if (url.protocol !== 'https:') throw Error('Use the production HTTPS site');

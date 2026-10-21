@@ -18,7 +18,7 @@
     window.gtag('consent', 'default', { analytics_storage: 'granted', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
     window.gtag('js', new Date());
     // Remove URL query and hash: they can contain user-provided values.
-    window.gtag('config', 'G-25L264DXWL', { page_location: location.origin + location.pathname, page_referrer: document.referrer ? new URL(document.referrer).origin : '', send_page_view: true, allow_google_signals: false, allow_ad_personalization_signals: false });
+    window.gtag('config', 'G-25L264DXWL', { page_location: location.origin + location.pathname, page_referrer: document.referrer ? new URL(document.referrer).origin : '', send_page_view: true, allow_google_signals: false, allow_ad_personalization_signals: false, cookie_expires: 60 * 24 * 60 * 60, cookie_update: false });
     const tag = document.createElement('script'); tag.async = true; tag.src = 'https://www.googletagmanager.com/gtag/js?id=G-25L264DXWL'; document.head.appendChild(tag);
   }
   function track(event, values = {}) { if (prod && consent === 'granted' && window.gtag) window.gtag('event', event, values); }

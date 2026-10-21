@@ -1,38 +1,56 @@
-# OCULOOM — Business Growth Ecosystem website
+# OCULOOM approved website implementation
 
-A responsive, one-page static website built with HTML, CSS and vanilla JavaScript. No framework or build step is required.
+Static multipage site for the existing GitHub → Netlify deployment. Original uploaded logos are in `assets/`, unmodified. No client logos are published until approved assets are supplied.
 
-## Files
-- `index.html` — page structure and copy
-- `styles.css` — design system, responsive layouts, animation and component styles
-- `script.js` — mobile navigation, scroll reveals, interactive calendar and email-draft forms
-- `assets/` — place official brand assets here
+## Build and preview
 
-## Run locally
-1. Download and extract the ZIP.
-2. Open `index.html` in a modern browser. For a more realistic local server, run `python -m http.server 8000` from this folder and open `http://localhost:8000`.
+Node 22+, `npm ci`, `npm run build`, `npm test`. Netlify configuration is in `netlify.toml`: build `npm run build`, publish `dist`. No SPA catch-all: every page has its own HTML URL.
 
-## Before launch — important edits
-1. **Official logo:** the header/footer currently use a CSS-drawn interlocking-circle wordmark and the hero uses an inline SVG infinity placeholder. Replace those with the approved OCULOOM logo asset when available. Do not distort the source logo. If your official logo is supplied as SVG, place it in `assets/` and use an `<img src="assets/oculoom-logo.svg" alt="OCULOOM">` in the wordmark and hero where appropriate.
-2. **Contact email:** `oculoomhq@gmail.com` is used by the contact form and meeting request mailto. Search and replace it if the official inbox changes.
-3. **Instagram / LinkedIn / X:** check the social URLs in the footer. Replace any profile placeholder with the official profile. Instagram is set to `https://www.instagram.com/oculoomhq/`; LinkedIn is set to `https://www.linkedin.com/company/oculoom/`; X currently links to the X homepage and should be replaced with the official account or removed.
-4. **Book a Meeting:** the calendar is a client-side request helper, not a live booking system. It offers sample time slots and opens an email draft; it does not check a calendar or confirm a reservation. Connect Calendly, Google Calendar appointment scheduling, or a booking backend if you want confirmed availability.
-5. **Contact form:** this opens the visitor's default email app with a prefilled draft. It does not store or submit form data to a server. Connect Formspree, Basin, your CRM, or a custom backend before launch if you need server-side submissions.
-6. **Case studies and metrics:** the project cards are illustrative concept examples, not actual OCULOOM client case studies or verified outcomes. Replace them with approved client stories and substantiated metrics before publishing. The dashboard numbers are also explicitly illustrative.
-7. **Technology partner marks:** the partner strip uses styled text/typographic marks rather than official logo artwork. Use approved brand assets and follow each provider's logo guidelines if exact logos are required.
-8. **Photos:** the decorative photos are loaded from Unsplash URLs and require an internet connection. Download appropriately licensed photos into `assets/` and update the CSS URLs if you want locally hosted imagery.
-9. **Privacy and legal:** add your privacy policy, terms and any required cookie/analytics disclosures before enabling analytics or collecting visitor information.
+Approved pages: Home, Ecosystem, Services, Approach, About, Pilot and pilot success, Contact and contact success; Privacy remains a **draft**, plus 404. The service URL hash opens the matching service panel. Mobile/tap, keyboard tabs, escape-to-close, reduced motion and consent controls are included.
 
-## Deploy to Vercel and connect oculoom.in
-1. Create a GitHub repository and upload the contents of this folder (the files should be at the repository root, not buried in another folder).
-2. In Vercel, choose **Add New → Project**, import the GitHub repository, and keep the framework preset as **Other**. No build command is required; leave the output directory at the project root unless Vercel asks otherwise.
-3. Deploy the project and preview the generated Vercel URL on desktop and mobile.
-4. In Vercel project **Settings → Domains**, add `oculoom.in` and optionally `www.oculoom.in`.
-5. In GoDaddy DNS, enter the exact records Vercel displays for your project. DNS values can differ by setup; do not copy records from an unrelated tutorial. Remove conflicting records only after checking what currently uses them.
-6. Wait for Vercel to verify the domain and issue HTTPS. Test the root domain, `www` if configured, every navigation link, the email draft, the calendar, keyboard focus, and a mobile viewport.
+## Netlify Forms — required account setup
 
-## Accessibility and performance notes
-- Responsive layouts and keyboard-visible focus states are included.
-- Scroll reveals respect `prefers-reduced-motion`.
-- Decorative dashboard visuals are marked illustrative; the calendar buttons have accessible labels.
-- Google Fonts and Unsplash photos are external requests. Self-host them if you need tighter privacy/performance control.
+1. In the correct Netlify project, open Forms and enable form detection **before redeploying**.
+2. Build/deploy this branch as a Deploy Preview. Check Netlify detects `contact-enquiry` and `pilot-application`.
+3. Configure form notifications to `oculoomhq@gmail.com` under the project’s form notifications. This cannot be activated from static source code alone. Do not assume email delivery until tested.
+4. Send disposable test enquiries and pilot applications. Verify each is saved in the dashboard, its email notification arrives, and only then confirm the success page.
+5. On invalid fields the browser blocks submission; on failed network responses entered details stay in place. Double submission is disabled while pending. Local preview does not fake a successful save.
+6. No automatic applicant email is currently sent. Success is shown in the browser. Native HTML fallback also posts to Netlify using each form’s action.
+7. Forms use a honeypot and Netlify filtering. Consider additional provider-supported anti-spam if real traffic warrants it.
+
+**Important:** consent acknowledges the privacy policy but the policy must be finalised before accepting real submissions. This PR is a preview, not a production-ready policy claim.
+
+## Rejected pilot deletion — must configure and test
+
+A protected admin endpoint queues a rejection timestamp in a private Netlify Blobs store. An hourly scheduled function deletes queued Netlify submissions once due. It starts the clock from the **rejection decision**, not the application date, and repeated reject calls do not extend that clock. The queue becomes due at 9 days 23 hours so the next hourly pass normally runs within 10 days. Monitor failures: an external outage can delay a sweep and requires manual action to meet the policy.
+
+Required **production Functions-scoped** Netlify environment variables:
+- `RETENTION_ENABLED`: set to `true` in the production Functions scope only after setup and a disposable test.
+- `NETLIFY_API_TOKEN`: a Netlify credential authorised for this site’s Forms API. Never commit it or include it in client code.
+- `PILOT_ADMIN_SECRET`: a randomly generated administrator-only secret of at least 32 characters. Never place it in a URL or browser script.
+- `SITE_ID`: supplied by Netlify; confirm available to Functions.
+
+The functions are deliberately disabled unless `RETENTION_ENABLED=true` and fail closed without settings. Netlify must support the Blobs/function configuration for this site. Confirm the hourly function appears in its dashboard and test against disposable data first. Review account usage/billing before enabling.
+
+For an unsuccessful application, get its submission ID from Netlify. On an administrator’s computer set `OCULOOM_SITE_URL` to the HTTPS production domain and `PILOT_ADMIN_SECRET` in the terminal environment, then run:
+
+```
+node scripts/reject-pilot.mjs SUBMISSION_ID
+```
+
+To cancel a mistaken rejection **before deletion**, use `node scripts/reject-pilot.mjs SUBMISSION_ID cancel`. This removes the scheduled rejection, not the application. The endpoint validates the ID belongs to this site’s `pilot-application` form. It is not linked publicly.
+
+Deletion covers the Netlify form record and the rejection queue, **not email copies, CSV exports or other systems**. Avoid notification emails containing full pilot data if possible; otherwise remove these copies manually within the same period. Do not promise universal automated deletion. Enquiry and accepted-client retention periods are still undecided. No scheduled function has run or deleted real data as part of preparing this PR.
+
+## Analytics and privacy
+
+GA4 `G-25L264DXWL` loads only on oculoom.in/www.oculoom.in after explicit analytics acceptance. Declining makes no Google Analytics request. Cookie settings can change the choice and remove first-party GA cookies. Google advertising/personalisation signals are disabled. Code sends no form values to Analytics; query strings and hashes are omitted from configured page URLs. Automatic enhanced-measurement form tracking and user-provided data collection should be **disabled in the GA4 property** before launch; review its settings so website restrictions are not undermined by account-level tracking. Configure retention in GA4 and finalise cookie/provider disclosures. Browser events include successful `generate_lead` and pilot interest clicks. Preview hosts do not track.
+
+## Launch gates
+
+- Validate preview desktop/mobile and live provider form storage/notifications.
+- Configure and test rejection workflow/monitoring; manage email copies.
+- Confirm legal operator details, enquiry/successful-client retention and processor locations; remove privacy draft status only after review.
+- Confirm Analytics settings and consent behaviour on actual domain.
+- Keep client logos hidden pending assets.
+- Merge the PR only after preview review. No production merge/deployment is performed by this change alone.

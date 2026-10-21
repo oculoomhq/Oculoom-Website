@@ -1,0 +1,7 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {rejectionRecord,cleanRejected,TEN_DAYS_MS} from '../lib/retention.mjs';
+function storeFor(records){const data=new Map(Object.entries(records));return {data,async *list(){yield {blobs:[...data.keys()].map(key=>({key}))};},async get(key){return data.get(key)},async delete(key){data.delete(key)}}}
+test('rejection starts deletion clock from decision; ready before ten-day deadline',()=>{const now=Date.UTC(2026,9,21);const r=rejectionRecord('test-id',now);assert.equal(Date.parse(r.rejectedAt),now);assert.equal(Date.parse(r.deleteAfter),now+TEN_DAYS_MS-3600000)});
+test('sweep deletes only due rejections and removes queue after provider success',async()=>{const now=Date.UTC(2026,9,21);const store=storeFor({due:rejectionRecord('due',now-TEN_DAYS_MS),future:rejectionRecord('future',now),invalid:{submissionId:'invalid',deleteAfter:'invalid'}});const calls=[];assert.equal(await cleanRejected({store,now,deleteSubmission:async id=>calls.push(id)}),1);assert.deepEqual(calls,['due']);assert.equal(store.data.has('due'),false);assert.equal(store.data.has('future'),true);assert.equal(store.data.has('invalid'),true)});
+test('failed deletion leaves queue for retry',async()=>{const now=Date.UTC(2026,9,21);const store=storeFor({due:rejectionRecord('due',now-TEN_DAYS_MS)});await assert.rejects(cleanRejected({store,now,deleteSubmission:async()=>{throw Error('unavailable')}}));assert.equal(store.data.has('due'),true)});

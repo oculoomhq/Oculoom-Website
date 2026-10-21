@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /pilot-thanks.html
+Disallow: /contact-thanks.html
+Sitemap: https://oculoom.in/sitemap.xml

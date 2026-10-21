@@ -40,7 +40,7 @@ node scripts/reject-pilot.mjs SUBMISSION_ID
 
 To cancel a mistaken rejection **before deletion**, use `node scripts/reject-pilot.mjs SUBMISSION_ID cancel`. This removes the scheduled rejection, not the application. The endpoint validates the ID belongs to this site’s `pilot-application` form. It is not linked publicly.
 
-Deletion covers the Netlify form record and the rejection queue, **not email copies, CSV exports or other systems**. Avoid notification emails containing full pilot data if possible; otherwise remove these copies manually within the same period. Do not promise universal automated deletion. Enquiry and accepted-client retention periods are still undecided. No scheduled function has run or deleted real data as part of preparing this PR.
+Deletion covers the Netlify form record and the rejection queue, **not email copies, CSV exports or other systems**. Avoid notification emails containing full pilot data if possible; otherwise remove these copies manually within the same period. Do not promise universal automated deletion. General enquiries that do not become client engagements are to be deleted six months after the last conversation. This requires a last-contact record and a separate deletion workflow; the current pilot-only scheduler does not automate enquiry deletion. Accepted-client retention remains undecided. No scheduled function has run or deleted real data as part of preparing this PR.
 
 ## Analytics and privacy
 

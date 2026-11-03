@@ -5,7 +5,12 @@ function render(key,rows){
   if(!rows.length) list.textContent='No submissions found.';
   for(const row of rows){
     const details=document.createElement('details'), title=document.createElement('summary');
-    title.textContent=[row.business||row.name||'Submission',row.created_at?new Date(row.created_at).toLocaleString():''].filter(Boolean).join(' · ');
+    for(const [value,kind] of [[row.business||row.name||'Submission','record-name'],[row.business?row.name:'','record-contact'],[row.created_at?new Date(row.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'','record-date']]){
+      const cell=document.createElement('span');
+      cell.className=kind;
+      cell.textContent=value;
+      title.append(cell);
+    }
     details.append(title);
     for(const [label,k] of [['Name','name'],['Email','email'],['Business','business'],['Website','website'],['Topic','topic'],['Capability','capability'],['Message','message']]){
       if(!row[k]) continue;

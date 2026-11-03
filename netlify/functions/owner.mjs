@@ -73,8 +73,8 @@ export default async function(req){
         return result;
       }
       if(user.email_verified!==true || user.email?.toLowerCase()!==owner.toLowerCase()) return denied();
-      const expiry=String(Date.now()+3600000);
-      const result=redirect('/admin',cookie('__Host-oc_owner',expiry+'.'+sign(expiry+':'+owner,key),3600));
+      const ownerExpiry=String(Date.now()+3600000);
+      const result=redirect('/admin',cookie('__Host-oc_owner',ownerExpiry+'.'+sign(ownerExpiry+':'+owner,key),3600));
       result.headers.append('set-cookie',cookie('__Host-oc_state','',0));
       return result;
     }

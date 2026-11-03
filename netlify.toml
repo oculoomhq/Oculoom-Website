@@ -16,3 +16,15 @@
 [context.deploy-preview]
   [context.deploy-preview.environment]
     ROBOTS_NOINDEX = "true"
+
+[[redirects]]
+  from = "/admin"
+  to = "/admin.html"
+  status = 200
+
+[[headers]]
+  for = "/admin*"
+  [headers.values]
+    Cache-Control = "no-store"
+    X-Robots-Tag = "noindex, nofollow"
+    Content-Security-Policy = "default-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"

@@ -60,3 +60,19 @@ GA4 `G-25L264DXWL` loads only on oculoom.in/www.oculoom.in after explicit analyt
 The authenticated `verify` action reads the provider submission and private queue without writing or scheduling a rejection. It is allowed with `RETENTION_ENABLED=false`. After production deployment, use `node scripts/reject-pilot.mjs SUBMISSION_ID verify` with the saved admin secret and HTTPS production URL. Expect connectionVerified/submissionVerified/storageReadable true, retentionEnabled false, scheduled false for a fresh test. `reject` is blocked while the switch is false. `cancel` remains available for safety even with the switch off.
 
 Analytics configuration is two months for user/event data, reset off (confirmed by owner). Tag cookies explicitly expire after 60 days with cookie_update false. These are distinct from provider aggregate report retention. The policy includes Netlify/Gmail/Analytics processing and the six-month enquiry / twelve-month project record rules. Manually manage mail/export/project copies; no claim that the pilot-only function deletes those automatically.
+
+### Private owner portal
+
+Open `https://oculoom.in/admin` directly. In a Google OAuth web application, register
+`https://oculoom.in/.netlify/functions/owner?action=callback` as the redirect URI
+and allow the owner account on the consent screen if it is in testing mode.
+Set these Netlify Functions variables in the production context only:
+
+- `ADMIN_GOOGLE_CLIENT_ID` and `ADMIN_GOOGLE_CLIENT_SECRET` from that web application
+- `ADMIN_OWNER_EMAIL` to the Google account approved for access
+- `ADMIN_SESSION_SECRET` to a securely generated random secret of at least 32 characters
+
+The form view uses the existing `NETLIFY_API_TOKEN` and `SITE_ID`. It reads up to
+50 recent records per form and does not make a separate copy or change retention.
+Gmail and client tracking are not connected. Verify the approved login, rejection
+of another account, sign-out, and both live form views before relying on the portal.

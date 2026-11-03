@@ -76,3 +76,19 @@ The form view uses the existing `NETLIFY_API_TOKEN` and `SITE_ID`. It reads up t
 50 recent records per form and does not make a separate copy or change retention.
 Gmail and client tracking are not connected. Verify the approved login, rejection
 of another account, sign-out, and both live form views before relying on the portal.
+
+### Read-only Gmail outreach
+
+Enable the Gmail API in the Google Cloud project used for owner login. Under
+Google Auth Platform → Data Access, add the Gmail read-only scope
+(`https://www.googleapis.com/auth/gmail.readonly`). Keep the existing redirect
+URI and add the owner and OCULOOM mailbox as test users if they differ. The
+owner then uses **Connect Gmail** in the dashboard and consents as
+`oculoomhq@gmail.com`. This connection lasts at most as long as the owner session;
+no refresh token is stored. Sign out or remove app access in Google to disconnect.
+
+For the 30-day totals, label sent outreach `oculoom-outreach`, human responses
+`oculoom-reply`, and bounce notices `oculoom-bounce` in Gmail. Apply labels to
+the relevant messages; Gmail conversation-level labeling may also label other
+messages in that conversation. Counts show 100+ if more pages exist. This does
+not import or classify historical outreach automatically.

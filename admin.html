@@ -11,13 +11,13 @@
 <aside><h2>OCULOOM</h2><p>Private admin portal</p><nav><a href="#overview" class="current">Overview</a><a href="#pilot">Pilot Applications</a><a href="#contact">Let’s Talk Enquiries</a><a href="#outreach">Outreach</a></nav><form method="post" action="/.netlify/functions/owner?action=logout"><button>Sign out</button></form></aside>
 <main class="overview" id="overview"><header><div><small class="eyebrow">OWNER WORKSPACE</small><h1>Overview</h1><p>Your outreach and website activity at a glance.</p></div><p id="sync"></p></header>
 <div class="cards">
-<a href="#outreach"><i aria-hidden="true">↗</i>Emails Sent<strong>—</strong><small>Gmail not connected</small></a>
-<a href="#outreach"><i aria-hidden="true">↩</i>Human Replies<strong>—</strong><small>Gmail not connected</small></a>
-<a href="#outreach"><i aria-hidden="true">!</i>Bounces<strong>—</strong><small>Gmail not connected</small></a>
+<a href="#outreach"><i aria-hidden="true">↗</i>Emails Sent<strong id="gmail-sent">—</strong><small id="gmail-sent-note">Gmail not connected</small></a>
+<a href="#outreach"><i aria-hidden="true">↩</i>Human Replies<strong id="gmail-replies">—</strong><small id="gmail-replies-note">Gmail not connected</small></a>
+<a href="#outreach"><i aria-hidden="true">!</i>Bounces<strong id="gmail-bounces">—</strong><small id="gmail-bounces-note">Gmail not connected</small></a>
 <a href="#pilot"><i aria-hidden="true">◇</i>Pilot Applications<strong id="pilot-count"></strong><small>Recent submissions</small></a>
 <a href="#contact"><i aria-hidden="true">✉</i>Contact Enquiries<strong id="contact-count"></strong><small>Recent submissions</small></a>
 <a href="#outreach"><i aria-hidden="true">◎</i>Active Clients<strong>—</strong><small>Tracking not set up</small></a>
 </div><div class="workspace"><div class="records"><section id="pilot"><h2>Pilot Applications</h2><div id="pilot-rows"></div></section>
 <section id="contact"><h2>Let’s Talk Enquiries</h2><div id="contact-rows"></div></section>
-</div><div class="activity"><section><h2>Follow-ups Due</h2><p>Follow-up tracking is not set up.</p></section><section><h2>Upcoming Calls</h2><p>Call tracking is not set up.</p></section><section id="outreach"><h2>Outreach &amp; Clients</h2><p>Gmail reporting and client tracking are not connected yet.</p><a href="https://mail.google.com/">Open Gmail</a></section>
+</div><div class="activity"><section><h2>Follow-ups Due</h2><p>Follow-up tracking is not set up.</p></section><section><h2>Upcoming Calls</h2><p>Call tracking is not set up.</p></section><section id="outreach"><h2>Outreach &amp; Clients</h2><p id="gmail-status" role="status">Connect OCULOOM Gmail to see labeled outreach activity.</p><a id="gmail-connect" class="button" href="/.netlify/functions/owner?action=gmail-connect">Connect Gmail</a><div id="gmail-recent"></div><p>Client tracking is not set up.</p><a href="https://mail.google.com/">Open Gmail</a></section>
 </div></div></main></div></body></html>
